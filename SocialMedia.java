@@ -1,6 +1,6 @@
 import java.util.ArrayList;
 
-public class SocialMedia implements SocialMediaInterface {
+public class SocialMedia implements SocialMediaInterface, Serializable {
 	
 	//Attributes
 	
@@ -23,16 +23,52 @@ public class SocialMedia implements SocialMediaInterface {
 
 	//Account Creation, Deletion and Updating Methods
 	int createAccount(String handle) throws IllegalHandleException, InvalidHandleException{
+		if (handle.length() > 30 || handle.length() == 0){
+			throw InvalidHandleException;
+		}
+		for (i = 0; i< accounts.size(); i++){
+			if (accounts[i].getHandle() == handle) {
+				throw IllegalHandleException;
+			}
+		}
 		
-		accounts.add(new Account(nextId++, handle);
+		for (i = 0; i< accounts.size(); i++){
+			if (accounts[i].getHandle() == handle) {
+				throw IllegalHandleException;
+			}
+		}
+
+		Account account = new Account(nextId++, handle);
+		accounts.add(account);
+		account.getID()
 	}
 	
 	int createAccount(String handle, String description) throws IllegalHandleException, InvalidHandleException {
-		accounts.add(new Account(nextId++, handle, description);
+		if (handle.length() > 30 || handle.length() == 0){
+			throw InvalidHandleException;
+		}
+		
+		for (int i=0; i< handle.length(); i++) {
+			if (Character.isWhitespace(handle.charAt(i))){
+				throw InvalidHandleException;
+			}
+		}
+		
+		for (i = 0; i< accounts.size(); i++){
+			if (accounts[i].getHandle() == handle) {
+				throw IllegalHandleException;
+			}
+		}
+		
+		Account account = new Account(nextId++, handle, description);
+		accounts.add(account);
+		account.getID();
 	}
 	
 	void removeAccount(int id) throws AccountIDNotRecognisedException{
 		//TO DO
+		Account account = getAccountById(id);
+				
 	}
 	
 	void removeAccount(String handle) throws HandleNotRecognisedException {
@@ -51,7 +87,7 @@ public class SocialMedia implements SocialMediaInterface {
 	}
 	
 	Account getAccountByHandle(String handle) throws HandleNotRecognisedException{
-		for (int i = 0; i<= accounts.size(); i++){
+		for (int i = 0; i< accounts.size(); i++){
 			if (accounts[i].getHandle() == handle){
 				return accounts[i];
 			}
@@ -60,6 +96,14 @@ public class SocialMedia implements SocialMediaInterface {
 		throw HandleNotRecognisedException;
 	}
 	
+	Account getAccountById(int id) throws IDNotRecognisedException{
+		for (int i = 0; i< accounts.size(); i++){
+			if (accounts[i].getId() == id){
+				return accounts[i];
+			}
+		throw IDNotRecognisedException;
+		}
+	
 	String showAccount(String handle) throws HandleNotRecognisedException{
 		return "";
 	}
@@ -67,17 +111,56 @@ public class SocialMedia implements SocialMediaInterface {
 	//Post Methods
 	
 	int createPost(String handle, String message) throws HandleNotRecognisedException, InvalidPostException{
-		return 0;
+		Account account = getAccountByHandle(handle);
+		if (message.length() == 0 || message.length() > 100) {
+			throw InvalidPostException;
+		}
+		Post post = new Post(account, message);
+		account.addPost(post);
+		return post.getPostId();
 	}
+	
+	
 	
 	int endorsePost(String handle, int id)
 			throws HandleNotRecognisedException, PostIDNotRecognisedException, NotActionablePostException{
-				return 0;
+				Account account = getAccountByHandle(handle);
+				Post post = getPostById(id);
+				if (post instanceof Endorsement) {
+					throw NotActionablePostException;
+				}
+				Endorsement endorsement = new Endorsement(account, post);
+				account.addEndorsement(endorsement);
+				post.addEndorsement(endorsement);
+				return endorsement.getPostId();
 			}
+			
+	Post getPostById(int postId) throws PostIdNotRecognisedException{
+		for (i=0; i< accounts.size(); i++){
+			try {
+				Post post = accounts.getPostById(postId);
+			} catch (PostIdNotRecognisedException e) {
+			} else {
+				return post;
+			}
+		}
+		throw PostIdNotRecognisedException;
+	}
 			
 	int commentPost(String handle, int id, String message) throws HandleNotRecognisedException,
 			PostIDNotRecognisedException, NotActionablePostException, InvalidPostException{
-				return 0;
+				Account account = getAccountByHandle(handle);
+				Post post = getPostById(id);
+				if (post instanceof Endorsement) {
+					throw NotActionablePostException;
+				}
+				if (message.length() == 0 || message.length() > 100) {
+					throw InvalidPostException;
+				}
+				Comment comment = new Comment(account, post, message);
+				account.addCommment(comment);
+				post.addComment(comment);
+				return comment.getPostId();
 			}
 			
 	void deletePost(int id) throws PostIDNotRecognisedException{
@@ -98,7 +181,7 @@ public class SocialMedia implements SocialMediaInterface {
 	}
 	int getTotalOriginalPosts() {
 		int count = 0;
-		for (int i = 0; i<= accounts.size(); i++){
+		for (int i = 0; i< accounts.size(); i++){
 			count += accounts[i].getNoOriginalPosts();
 		}
 
@@ -106,7 +189,7 @@ public class SocialMedia implements SocialMediaInterface {
 	}
 	int getTotalEndorsmentPosts() {
 		int count = 0;
-		for (int i = 0; i<= accounts.size(); i++){
+		for (int i = 0; i< accounts.size(); i++){
 			count += accounts[i].getNoEndorsements();
 		}
 
@@ -115,7 +198,7 @@ public class SocialMedia implements SocialMediaInterface {
 	}
 	int getTotalCommentPosts() {
 		int count = 0;
-		for (int i = 0; i<= accounts.size(); i++){
+		for (int i = 0; i< accounts.size(); i++){
 			count += accounts[i].getNoComments();
 		}
 
