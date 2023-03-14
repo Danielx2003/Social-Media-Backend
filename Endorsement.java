@@ -1,13 +1,13 @@
 public class Endorsement extends Post {
 	
-	private int referenceId;
+	private Post post;
 	
 
 	//Constructors 
 	
-	public Endorsement(int accountId, String accountHandle int referenceId, String message){
-		super(accountId, "EP@" + [accountHandle] + ": " + [message]);
-		this.referenceId = referenceId;
+	public Endorsement(Account account, Post post){
+		super(account, "EP@" + [account.getHandle()] + ": " + [post.getMessage()]);
+		this.post = post;
 	}
 	
 	//Methods

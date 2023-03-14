@@ -1,6 +1,6 @@
 import java.util.ArrayList;
 
-public class Account{
+public class Account implements Serializable{
 	//Attributes
 	private int id;
 	private String handle;
@@ -35,8 +35,16 @@ public class Account{
 		
 	}
 	
-	public void createEndorsement(int referenceId, String message) {
-		endorsements.add(new Endorsement(id, handle, referenceId, message));
+	public void addEndorsement(Endorsement endorsement) {
+		endorsements.add(endorsement);
+	}
+	
+	public void addPost(Post post){
+		originalPosts.add(post);
+	}
+	
+	public void addComment(Comment comment) {
+		comments.add(comment);
 	}
 	
 	//Getters and Setters
@@ -76,5 +84,26 @@ public class Account{
 	
 	public int getEndorsementsRecieved(){
 		return endorsementsRecieved;
+	}
+	
+	public void addEndorsementsRecieved(){
+		endorsementsRecieved ++;
+	}
+	
+	public Post getPostById(int postId) throws PostIDNotRecognisedException{
+		for (int i = 0; i<= originalPosts.size(); i++){
+			if (originalPosts[i].getPostId() == postId){
+				return originalPosts[i];
+			}
+		for (int i = 0; i<= comments.size(); i++){
+			if (comments[i].getPostId() == postId){
+				return comments[i];
+			}
+		for (int i = 0; i<= endorsement.size(); i++){
+			if (endorsement[i].getPostId() == postId){
+				return endorsement[i];
+			}
+		throw PostIDNotRecognisedException;
+		}
 	}
 }
