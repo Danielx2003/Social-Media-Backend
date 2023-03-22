@@ -29,7 +29,7 @@ public class Account implements Serializable{
 	
 	public void removeAccount() {
 		for (int i = 0; i<= originalPosts.size(); i++) {
-			originalPosts[i].deletePost();
+			originalPosts.get(i).deletePost();
  		}
 		originalPosts = null;
 		
@@ -39,6 +39,20 @@ public class Account implements Serializable{
 		endorsements.add(endorsement);
 	}
 	
+	
+	public void removePost(Post post){
+		if (post instanceof Endorsement){
+			endorsements.remove(post);
+			
+		} else if (post instanceof Comment){
+			comments.remove(post);
+			
+		} else {
+			originalPosts.remove(post);
+		}
+		
+	}
+	
 	public void addPost(Post post){
 		originalPosts.add(post);
 	}
@@ -46,6 +60,8 @@ public class Account implements Serializable{
 	public void addComment(Comment comment) {
 		comments.add(comment);
 	}
+	
+	public boolean checkForPost
 	
 	//Getters and Setters
 	public int getID(){
@@ -92,18 +108,38 @@ public class Account implements Serializable{
 	
 	public Post getPostById(int postId) throws PostIDNotRecognisedException{
 		for (int i = 0; i<= originalPosts.size(); i++){
-			if (originalPosts[i].getPostId() == postId){
-				return originalPosts[i];
+			if (originalPostsget(i).getPostId() == postId){
+				return originalPosts.get(i);
 			}
 		for (int i = 0; i<= comments.size(); i++){
-			if (comments[i].getPostId() == postId){
-				return comments[i];
+			if (comments.get(i).getPostId() == postId){
+				return comments.get(i);
 			}
 		for (int i = 0; i<= endorsement.size(); i++){
-			if (endorsement[i].getPostId() == postId){
-				return endorsement[i];
+			if (endorsement.get(i).getPostId() == postId){
+				return endorsement.get(i);
 			}
 		throw PostIDNotRecognisedException;
 		}
+	}
+	
+	public int getMostEndorsedPost(){
+		int count = -1;
+		int mostEndorsed = -1;
+		
+		for (int i = 0; i<= originalPosts.size(); i++){
+			if (originalPosts.get(i).getNoEndorsements() > count){
+				mostEndorsed = originalPosts.get(i).getPostId();
+				count = originalPosts.get(i).getNoEndorsements();
+			} 		
+		}
+		
+		for (int i = 0; i<= comments.size(); i++){
+			if (comments.get(i).getNoEndorsements() > count){
+				mostEndorsed = comments.get(i).getPostId();
+				count = comments.get(i).getNoEndorsements();
+			} 		
+		}
+		return mostEndorsed;
 	}
 }

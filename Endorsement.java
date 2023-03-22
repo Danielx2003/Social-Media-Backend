@@ -11,7 +11,14 @@ public class Endorsement extends Post {
 	}
 	
 	//Methods
+	@Override
 	public void deletePost(){
+		post.removeEndorsement(this);
+		this.post = null;
+		this.account.removePost(this);
 		
 	}
+	
+	
+	
 }

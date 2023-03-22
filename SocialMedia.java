@@ -26,21 +26,22 @@ public class SocialMedia implements SocialMediaInterface, Serializable {
 		if (handle.length() > 30 || handle.length() == 0){
 			throw InvalidHandleException;
 		}
-		for (i = 0; i< accounts.size(); i++){
-			if (accounts[i].getHandle() == handle) {
-				throw IllegalHandleException;
+		
+		for (int i=0; i< handle.length(); i++) {
+			if (Character.isWhitespace(handle.charAt(i))){
+				throw InvalidHandleException;
 			}
 		}
 		
 		for (i = 0; i< accounts.size(); i++){
-			if (accounts[i].getHandle() == handle) {
+			if (accounts.get(i).getHandle() == handle) {
 				throw IllegalHandleException;
 			}
 		}
 
 		Account account = new Account(nextId++, handle);
 		accounts.add(account);
-		account.getID()
+		return account.getID();
 	}
 	
 	int createAccount(String handle, String description) throws IllegalHandleException, InvalidHandleException {
@@ -55,14 +56,14 @@ public class SocialMedia implements SocialMediaInterface, Serializable {
 		}
 		
 		for (i = 0; i< accounts.size(); i++){
-			if (accounts[i].getHandle() == handle) {
+			if (accounts.get(i).getHandle() == handle) {
 				throw IllegalHandleException;
 			}
 		}
 		
 		Account account = new Account(nextId++, handle, description);
 		accounts.add(account);
-		account.getID();
+		return account.getID();
 	}
 	
 	void removeAccount(int id) throws AccountIDNotRecognisedException{
@@ -88,8 +89,8 @@ public class SocialMedia implements SocialMediaInterface, Serializable {
 	
 	Account getAccountByHandle(String handle) throws HandleNotRecognisedException{
 		for (int i = 0; i< accounts.size(); i++){
-			if (accounts[i].getHandle() == handle){
-				return accounts[i];
+			if (accounts.get(i).getHandle() == handle){
+				return accounts.get(i);
 			}
 			
 		}
@@ -98,8 +99,8 @@ public class SocialMedia implements SocialMediaInterface, Serializable {
 	
 	Account getAccountById(int id) throws IDNotRecognisedException{
 		for (int i = 0; i< accounts.size(); i++){
-			if (accounts[i].getId() == id){
-				return accounts[i];
+			if (accounts.get(i).getId() == id){
+				return accounts.get(i);
 			}
 		throw IDNotRecognisedException;
 		}
@@ -182,7 +183,7 @@ public class SocialMedia implements SocialMediaInterface, Serializable {
 	int getTotalOriginalPosts() {
 		int count = 0;
 		for (int i = 0; i< accounts.size(); i++){
-			count += accounts[i].getNoOriginalPosts();
+			count += accounts.get(i).getNoOriginalPosts();
 		}
 
 		return count;
@@ -190,7 +191,7 @@ public class SocialMedia implements SocialMediaInterface, Serializable {
 	int getTotalEndorsmentPosts() {
 		int count = 0;
 		for (int i = 0; i< accounts.size(); i++){
-			count += accounts[i].getNoEndorsements();
+			count += accounts.get(i).getNoEndorsements();
 		}
 
 		return count;
@@ -199,17 +200,33 @@ public class SocialMedia implements SocialMediaInterface, Serializable {
 	int getTotalCommentPosts() {
 		int count = 0;
 		for (int i = 0; i< accounts.size(); i++){
-			count += accounts[i].getNoComments();
+			count += accounts.get(i).getNoComments();
 		}
 
 		return count;
 	}
 	int getMostEndorsedPost(){
-		return 0;
+		int count = -1;
+		int highestId = -1;
+		for (int i = 0; i<= accounts.size(); i++){
+			if (accounts.get(i).getMostEndorsedPost().getNoEndorsements() > count){
+				highestId = accounts.get(i).getMostEndorsedPost();
+				count = accounts.get(i).getMostEndorsedPost().getNoEndorsements();
+			}
+		}
+		return highestId;
 	}
 	
 	int getMostEndorsedAccount(){
-		return 0;
+		int count = -1;
+		int highestId = -1;
+		for (int i = 0; i<= accounts.size(); i++){
+			if (accounts.get(i).getEndorsementsRecieved() > count){
+				highestId = accounts.get(i).getID();
+				count = accounts.get(i).getEndorsementsRecieved();
+			}
+		}
+		return highestId;
 	}
 	
 	//Management related methods
