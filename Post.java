@@ -10,6 +10,10 @@ public class Post implements Serializable{
 	private ArrayList<Endorsement> endorsements;
 	
 	//Constructors
+	public Post() {
+		this.postId = -1;
+		this.message = "The original content was removed from the system and is no longer available.";
+	}
 	public Post(Account account, String message) {
 		this.postId = nextId++;
 		this.account = account;
@@ -30,31 +34,23 @@ public class Post implements Serializable{
 	
 	public void deletePost() {
 		for (int i = 0; i<= comments.size(); i++) {
-			comments[i].deleteReference();
+			comments.get(i).deleteReference();
  		}
 		comments = null;
 		
 		for (int i = 0; i<= endorsements.size(); i++) {
-			endorsements[i].deletePost();
+			endorsements.get(i).deletePost();
  		}
 		endorsements = null;
+		
+		account.removePost(this);
 	
-	public void deleteComment(int commentId) {
-		for (int i = 0; i<= comments.size(); i++) {
-			if (comments[i].getPostId() == commentId) {
-				comments.remove(i);
-				break;
-			}
- 		}
+	public void removeComment(Comment comment) {
+		comments.remove(comment);
 	}
 	
-	public void deleteEndorsement(int endorsementId) {
-		for (int i = 0; i<= endorsements.size(); i++) {
-			if (endorsements[i].getPostId() == endorsementId) {
-				endorsements.remove(i);
-				break;
-			}
- 		}
+	public void removeEndorsement(Endorsement endorsement) {
+		endorsements.remove(endorsement);
 	}
 		
 	//Getters And Setters
