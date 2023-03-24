@@ -193,18 +193,12 @@ public class SocialMedia implements SocialMediaInterface, Serializable {
 			
 	void deletePost(int id) throws PostIDNotRecognisedException{
 		Post post = getPostByID(id);
-		if (post == null) {
-			throw PostIDNotRecognisedException;
-		}
-		
+		post.deletePost();
 		
 	}
 	
 	String showIndividualPost(int id) throws PostIDNotRecognisedException{
 		Post post = getPostByID(id);
-		if (post == null) {
-			throw PostIDNotRecognisedException;
-		}
 		
 		
 		
@@ -219,21 +213,43 @@ public class SocialMedia implements SocialMediaInterface, Serializable {
 	
 	StringBuilder showPostChildrenDetails(int id) throws PostIDNotRecognisedException, NotActionablePostException{
 		Post post = getPostByID();
-		if (post == null) {
-			throw PostIDNotRecognisedException;
+		if (post instanceof Endorsement) {
+			throw NotActionablePostException;
 		}
-		
-		
-		
-		
-		return "";
+		StringBuilder toReturn = StringBuilder(showIndividualPost(id));
+		if (comments.size() == 0){
+			return toReturn;
+		} else {
+			toReturn.append("\n|");
+			for (int i =0; i<= comments.size(); i++){
+				toReturn.append(showPartialChildrenDetails(post, depth + 1);
+			}
+			return toReturn;
+		}
 	}
 	
-	StringBuilder showPartialChildrenDetails(Post post) throws PostIDNotRecognisedException, NotActionablePostException{
-		int id = post.getId();
+	StringBuilder showPartialChildrenDetails(Post post, int depth) throws PostIDNotRecognisedException, NotActionablePostException{
+		int postId = post.getId();
+		String space = " ";
+		String lineStart = "\n" + space.repeat(4*depth);
+		String thisPost = "\n" + space.repeat(4*(depth-1))
+			+ "| > ID: " + post.getId()
+			+ lineStart + "Account: " + getAccountHandleByPostId(postId)
+			+ lineStart + "No. endorsements: " + post.getNoEndorsements()
+			+ " | No. comments: " + post.getNoComments()
+			+ lineStart + post.getMessage();
+		StringBuilder toReturn = StringBuilder(thisPost);
 		
-		if (post.getNoComments() == 0){
-			
+		ArrayList<Comment> comments = post.getComments();
+		
+		if (comments.size() == 0){
+			return toReturn;
+		} else {
+			toReturn.append(lineStart + "|");
+			for (int i =0; i<= comments.size(); i++){
+				toReturn.append(showPartialChildrenDetails(post, depth + 1);
+			}
+			return toReturn;
 		}
 		
 		
@@ -245,7 +261,7 @@ public class SocialMedia implements SocialMediaInterface, Serializable {
 	
 	}
 		
-	public Post getPostByID(int id){
+	public Post getPostByID(int id) throws PostIdNotRecognisedException {
 		Post post = null;
 		
 		for (int i =0; i<= accounts.size(); i++){
@@ -255,8 +271,10 @@ public class SocialMedia implements SocialMediaInterface, Serializable {
 			}
 		}
 		
-		
-	return post
+		if (post == null) {
+			throw PostIDNotRecognisedException;
+		}
+		return post;
 	}
 		
 	public String getAccountHandleByPostId(int id){
