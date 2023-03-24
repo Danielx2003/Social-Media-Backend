@@ -67,19 +67,39 @@ public class SocialMedia implements SocialMediaInterface, Serializable {
 	}
 	
 	void removeAccount(int id) throws AccountIDNotRecognisedException{
-		//TO DO
 		Account account = getAccountById(id);
+		account.removeAccount();
 				
 	}
 	
 	void removeAccount(String handle) throws HandleNotRecognisedException {
-		//TO DO
+		Account account = getAccountByHandle(handle);
+		account.removeAccount();
 	}
 	
 	void changeAccountHandle(String oldHandle, String newHandle)
 			throws HandleNotRecognisedException, IllegalHandleException, InvalidHandleException{
-
+		Account account = getAccountByHandle(oldHandle);
+		
+		if (newHandle.length() > 30 || newHandle.length() == 0){
+			throw InvalidHandleException;
+		}
+		
+		for (int i=0; i< newHandle.length(); i++) {
+			if (Character.isWhitespace(newHandle.charAt(i))){
+				throw InvalidHandleException;
 			}
+		}
+		
+		for (i = 0; i< accounts.size(); i++){
+			if (accounts.get(i).getHandle() == newHandle) {
+				throw IllegalHandleException;
+			}
+		}
+		
+		account.setHandle(newHandle);
+
+	}
 	
 	void updateAccountDescription(String handle, String description) throws HandleNotRecognisedException {
 		Account account = getAccountByHandle(handle);
@@ -106,7 +126,14 @@ public class SocialMedia implements SocialMediaInterface, Serializable {
 		}
 	
 	String showAccount(String handle) throws HandleNotRecognisedException{
-		return "";
+		Account account = getAccountByHandle(handle);
+		int noPosts = account.getNoOriginalPosts() + account.getNoComments() + account.getNoEndorsements();
+		String toReturn = "ID: " + account.getID()
+			      + "\nHandle: " + account.getHandle()
+			      + "\nDescription: " + account.getDescription()
+			      + "\nPost Count: " + noPosts
+			      + "\nEndorse Count: " + account.getEndorsementsRecieved();
+		return toReturn;
 	}
 	
 	//Post Methods
@@ -176,6 +203,7 @@ public class SocialMedia implements SocialMediaInterface, Serializable {
 		return "";
 	}
 	
+		
 	//Analytics Methods
 	int getNumberOfAccounts() {
 		return accounts.size();
