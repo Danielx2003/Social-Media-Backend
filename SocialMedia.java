@@ -67,19 +67,39 @@ public class SocialMedia implements SocialMediaInterface, Serializable {
 	}
 	
 	void removeAccount(int id) throws AccountIDNotRecognisedException{
-		//TO DO
 		Account account = getAccountById(id);
+		account.removeAccount();
 				
 	}
 	
 	void removeAccount(String handle) throws HandleNotRecognisedException {
-		//TO DO
+		Account account = getAccountByHandle(handle);
+		account.removeAccount();
 	}
 	
 	void changeAccountHandle(String oldHandle, String newHandle)
 			throws HandleNotRecognisedException, IllegalHandleException, InvalidHandleException{
-
+		Account account = getAccountByHandle(oldHandle);
+		
+		if (newHandle.length() > 30 || newHandle.length() == 0){
+			throw InvalidHandleException;
+		}
+		
+		for (int i=0; i< newHandle.length(); i++) {
+			if (Character.isWhitespace(newHandle.charAt(i))){
+				throw InvalidHandleException;
 			}
+		}
+		
+		for (i = 0; i< accounts.size(); i++){
+			if (accounts.get(i).getHandle() == newHandle) {
+				throw IllegalHandleException;
+			}
+		}
+		
+		account.setHandle(newHandle);
+
+	}
 	
 	void updateAccountDescription(String handle, String description) throws HandleNotRecognisedException {
 		Account account = getAccountByHandle(handle);
@@ -106,7 +126,14 @@ public class SocialMedia implements SocialMediaInterface, Serializable {
 		}
 	
 	String showAccount(String handle) throws HandleNotRecognisedException{
-		return "";
+		Account account = getAccountByHandle(handle);
+		int noPosts = account.getNoOriginalPosts() + account.getNoComments() + account.getNoEndorsements();
+		String toReturn = "ID: " + account.getID()
+			      + "\nHandle: " + account.getHandle()
+			      + "\nDescription: " + account.getDescription()
+			      + "\nPost Count: " + noPosts
+			      + "\nEndorse Count: " + account.getEndorsementsRecieved();
+		return toReturn;
 	}
 	
 	//Post Methods
@@ -165,17 +192,102 @@ public class SocialMedia implements SocialMediaInterface, Serializable {
 			}
 			
 	void deletePost(int id) throws PostIDNotRecognisedException{
-		//TO DO
+		Post post = getPostByID(id);
+		post.deletePost();
+		
 	}
 	
 	String showIndividualPost(int id) throws PostIDNotRecognisedException{
-		return "";
+		Post post = getPostByID(id);
+		
+		
+		
+		string toReturn = "ID: " + id 
+				+ "\nAccount: " + getAccountHandleByPostId(id)
+				+ "\nNo. Endorsements: " + post.getNoEndorsements() + "No. Comments: " + post.getNoComments() //need to add in post class
+				+ "\n" + post.getMessage();
+		
+		
+		return toReturn;
 	}
 	
 	StringBuilder showPostChildrenDetails(int id) throws PostIDNotRecognisedException, NotActionablePostException{
-		return "";
+		Post post = getPostByID();
+		if (post instanceof Endorsement) {
+			throw NotActionablePostException;
+		}
+		StringBuilder toReturn = StringBuilder(showIndividualPost(id));
+		if (comments.size() == 0){
+			return toReturn;
+		} else {
+			toReturn.append("\n|");
+			for (int i =0; i<= comments.size(); i++){
+				toReturn.append(showPartialChildrenDetails(post, depth + 1);
+			}
+			return toReturn;
+		}
 	}
 	
+	StringBuilder showPartialChildrenDetails(Post post, int depth) throws PostIDNotRecognisedException, NotActionablePostException{
+		int postId = post.getId();
+		String space = " ";
+		String lineStart = "\n" + space.repeat(4*depth);
+		String thisPost = "\n" + space.repeat(4*(depth-1))
+			+ "| > ID: " + post.getId()
+			+ lineStart + "Account: " + getAccountHandleByPostId(postId)
+			+ lineStart + "No. endorsements: " + post.getNoEndorsements()
+			+ " | No. comments: " + post.getNoComments()
+			+ lineStart + post.getMessage();
+		StringBuilder toReturn = StringBuilder(thisPost);
+		
+		ArrayList<Comment> comments = post.getComments();
+		
+		if (comments.size() == 0){
+			return toReturn;
+		} else {
+			toReturn.append(lineStart + "|");
+			for (int i =0; i<= comments.size(); i++){
+				toReturn.append(showPartialChildrenDetails(post, depth + 1);
+			}
+			return toReturn;
+		}
+		
+		
+		string toReturn = "ID: " + id 
+		+ "\nAccount: " + getAccountHandleByPostId(id)
+		+ "\nNo. Endorsements: " + post.getNoEndorsements() + "No. Comments: " + post.getNoComments() //need to add in post class
+		+ "\n" + post.getMessage();
+	
+	
+	}
+		
+	public Post getPostByID(int id) throws PostIdNotRecognisedException {
+		Post post = null;
+		
+		for (int i =0; i<= accounts.size(); i++){
+			if (accounts.get(i).checkForPost(id)){
+				Post post = accounts.get(i).getPostById(id);
+				accounts.get(i).removePost(post);
+			}
+		}
+		
+		if (post == null) {
+			throw PostIDNotRecognisedException;
+		}
+		return post;
+	}
+		
+	public String getAccountHandleByPostId(int id){
+		String handle = "";
+		for (int i =0; i<= accounts.size(); i++){
+			if (accounts.get(i).checkForPost(id)){
+				handle = accounts.get(i).getHandle();
+				
+			}
+		}
+	return handle;
+	}
+		
 	//Analytics Methods
 	int getNumberOfAccounts() {
 		return accounts.size();

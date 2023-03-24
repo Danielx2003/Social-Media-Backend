@@ -61,7 +61,22 @@ public class Account implements Serializable{
 		comments.add(comment);
 	}
 	
-	public boolean checkForPost
+	public boolean checkForPost(int Id) {
+		boolean present = false;
+		for (int i = 0; i<= originalPosts.size(); i++){
+			if (originalPostsget(i).getPostId() == postId){
+				present = true;
+			}
+		for (int i = 0; i<= comments.size(); i++){
+			if (comments.get(i).getPostId() == postId){
+				present =  true;
+			}
+		for (int i = 0; i<= endorsement.size(); i++){
+			if (endorsement.get(i).getPostId() == postId){
+				present = true;
+			}
+	        return present;
+	}
 	
 	//Getters and Setters
 	public int getID(){
