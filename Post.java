@@ -69,6 +69,10 @@ public class Post implements Serializable{
 	public int getNoEndorsements(){
 		return endorsements.size();
 	}
+		
+	public int getNoComments(){
+		return comments.size();
+	}
 	
 	public ArrayList<Comment> getCommentsOnPost(){
 		return comments;
