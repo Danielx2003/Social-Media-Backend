@@ -192,17 +192,69 @@ public class SocialMedia implements SocialMediaInterface, Serializable {
 			}
 			
 	void deletePost(int id) throws PostIDNotRecognisedException{
-		//TO DO
+		Post post = getPostByID(id);
+		if (post == null) {
+			throw PostIDNotRecognisedException;
+		}
+		
+		
 	}
 	
 	String showIndividualPost(int id) throws PostIDNotRecognisedException{
-		return "";
+		Post post = getPostByID(id);
+		if (post == null) {
+			throw PostIDNotRecognisedException;
+		}
+		
+		
+		
+		string toReturn = "ID: " + id 
+				+ "\nAccount: " + getAccountHandleByPostId(id)
+				+ "\nNo. Endorsements: " + post.getNoEndorsements() + "No. Comments: " + post.getNoComments() //need to add in post class
+				+ "\n" + post.getMessage();
+		
+		
+		return toReturn;
 	}
 	
 	StringBuilder showPostChildrenDetails(int id) throws PostIDNotRecognisedException, NotActionablePostException{
+		Post post = getPostByID();
+		if (post == null) {
+			throw PostIDNotRecognisedException;
+		}
+		
+		
+		
+		
 		return "";
 	}
 	
+		
+		
+	public Post getPostByID(int id){
+		Post post = null;
+		
+		for (int i =0; i<= accounts.size(); i++){
+			if (accounts.get(i).checkForPost(id)){
+				Post post = accounts.get(i).getPostById(id);
+				accounts.get(i).removePost(post);
+			}
+		}
+		
+		
+	return post
+	}
+		
+	public String getAccountHandleByPostId(int id){
+		String handle = "";
+		for (int i =0; i<= accounts.size(); i++){
+			if (accounts.get(i).checkForPost(id)){
+				handle = accounts.get(i).getHandle();
+				
+			}
+		}
+	return handle;
+	}
 		
 	//Analytics Methods
 	int getNumberOfAccounts() {
