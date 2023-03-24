@@ -229,7 +229,21 @@ public class SocialMedia implements SocialMediaInterface, Serializable {
 		return "";
 	}
 	
+	StringBuilder showPartialChildrenDetails(Post post) throws PostIDNotRecognisedException, NotActionablePostException{
+		int id = post.getId();
 		
+		if (post.getNoComments() == 0){
+			
+		}
+		
+		
+		string toReturn = "ID: " + id 
+		+ "\nAccount: " + getAccountHandleByPostId(id)
+		+ "\nNo. Endorsements: " + post.getNoEndorsements() + "No. Comments: " + post.getNoComments() //need to add in post class
+		+ "\n" + post.getMessage();
+	
+	
+	}
 		
 	public Post getPostByID(int id){
 		Post post = null;
