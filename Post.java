@@ -70,6 +70,8 @@ public class Post implements Serializable{
 		return endorsements.size();
 	}
 	
-	} 
+	public ArrayList<Comment> getCommentsOnPost(){
+		return comments;
+	}
 	
 }
