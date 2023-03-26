@@ -69,12 +69,14 @@ public class SocialMedia implements SocialMediaInterface, Serializable {
 	void removeAccount(int id) throws AccountIDNotRecognisedException{
 		Account account = getAccountById(id);
 		account.removeAccount();
+		accounts.remove(account);
 				
 	}
 	
 	void removeAccount(String handle) throws HandleNotRecognisedException {
 		Account account = getAccountByHandle(handle);
 		account.removeAccount();
+		accounts.remove(account);
 	}
 	
 	void changeAccountHandle(String oldHandle, String newHandle)
