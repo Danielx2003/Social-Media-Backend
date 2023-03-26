@@ -4,15 +4,11 @@ public class SocialMedia implements SocialMediaInterface, Serializable {
 	
 	//Attributes
 	private int nextID;
-	private int noComments;
-	private int noEndorsements;
 	private ArrayList<Account> accounts;
 
 	//Constructors
 	public SocialMedia() {
 		nextID = 1;
-		noComments = 0;
-		noEndorsements = 0;
 		accounts = new ArrayList<>();
 	}
 
