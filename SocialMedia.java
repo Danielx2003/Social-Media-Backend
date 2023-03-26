@@ -20,44 +20,44 @@ public class SocialMedia implements SocialMediaInterface, java.io.Serializable {
 	// Account Creation, Deletion and Updating Methods
 	int createAccount(String handle) throws IllegalHandleException, InvalidHandleException {
 		if (handle.length() > 30 || handle.length() == 0) {
-			throw InvalidHandleException;
+			throw new InvalidHandleException();
 		}
 
 		for (int i = 0; i < handle.length(); i++) {
 			if (Character.isWhitespace(handle.charAt(i))) {
-				throw InvalidHandleException;
+				throw new InvalidHandleException();
 			}
 		}
 
-		for (i = 0; i < accounts.size(); i++) {
+		for (int i = 0; i < accounts.size(); i++) {
 			if (accounts.get(i).getHandle() == handle) {
-				throw IllegalHandleException;
+				throw new IllegalHandleException();
 			}
 		}
 
-		Account account = new Account(nextId++, handle);
+		Account account = new Account(nextID++, handle); // nextId to nextID
 		accounts.add(account);
 		return account.getID();
 	}
 
 	int createAccount(String handle, String description) throws IllegalHandleException, InvalidHandleException {
 		if (handle.length() > 30 || handle.length() == 0) {
-			throw InvalidHandleException;
+			throw new InvalidHandleException();
 		}
 
 		for (int i = 0; i < handle.length(); i++) {
 			if (Character.isWhitespace(handle.charAt(i))) {
-				throw InvalidHandleException;
+				throw new InvalidHandleException();
 			}
 		}
 
 		for (int i = 0; i < accounts.size(); i++) {
 			if (accounts.get(i).getHandle() == handle) {
-				throw IllegalHandleException;
+				throw new IllegalHandleException();
 			}
 		}
 
-		Account account = new Account(nextId++, handle, description);
+		Account account = new Account(nextID++, handle, description); // corrected name
 		accounts.add(account);
 		return account.getID();
 	}
@@ -80,18 +80,18 @@ public class SocialMedia implements SocialMediaInterface, java.io.Serializable {
 		Account account = getAccountByHandle(oldHandle);
 
 		if (newHandle.length() > 30 || newHandle.length() == 0) {
-			throw InvalidHandleException;
+			throw new InvalidHandleException();
 		}
 
 		for (int i = 0; i < newHandle.length(); i++) {
 			if (Character.isWhitespace(newHandle.charAt(i))) {
-				throw InvalidHandleException;
+				throw new InvalidHandleException();
 			}
 		}
 
-		for (i = 0; i < accounts.size(); i++) {
+		for (int i = 0; i < accounts.size(); i++) { // added int
 			if (accounts.get(i).getHandle() == newHandle) {
-				throw IllegalHandleException;
+				throw new IllegalHandleException();
 			}
 		}
 
@@ -112,16 +112,16 @@ public class SocialMedia implements SocialMediaInterface, java.io.Serializable {
 			}
 
 		}
-		throw HandleNotRecognisedException;
+		throw new HandleNotRecognisedException();
 	}
 
-	Account getAccountById(int id) throws IDNotRecognisedException{
-		for (int i = 0; i< accounts.size(); i++){
-			if (accounts.get(i).getId() == id){
+	Account getAccountById(int id) throws AccountIDNotRecognisedException {
+		for (int i = 0; i < accounts.size(); i++) {
+			if (accounts.get(i).getID() == id) {
 				return accounts.get(i);
 			}
-		} //Added Bracket
-		throw IDNotRecognisedException;
+		} // Added Bracket
+		throw new AccountIDNotRecognisedException();
 	}
 
 	String showAccount(String handle) throws HandleNotRecognisedException {
@@ -140,7 +140,7 @@ public class SocialMedia implements SocialMediaInterface, java.io.Serializable {
 	int createPost(String handle, String message) throws HandleNotRecognisedException, InvalidPostException {
 		Account account = getAccountByHandle(handle);
 		if (message.length() == 0 || message.length() > 100) {
-			throw InvalidPostException;
+			throw new InvalidPostException();
 		}
 		Post post = new Post(account, message);
 		account.addPost(post);
@@ -152,7 +152,7 @@ public class SocialMedia implements SocialMediaInterface, java.io.Serializable {
 		Account account = getAccountByHandle(handle);
 		Post post = getPostById(id);
 		if (post instanceof Endorsement) {
-			throw NotActionablePostException;
+			throw new NotActionablePostException();
 		}
 		Endorsement endorsement = new Endorsement(account, post);
 		account.addEndorsement(endorsement);
@@ -160,15 +160,19 @@ public class SocialMedia implements SocialMediaInterface, java.io.Serializable {
 		return endorsement.getPostId();
 	}
 
-	Post getPostById(int postId) throws PostIdNotRecognisedException{
-		for (i=0; i< accounts.size(); i++){
+	Post getPostById(int postId) throws PostIDNotRecognisedException {
+		Post post = null;
+		for (int i = 0; i < accounts.size(); i++) { // added int
 			try {
-				Post post = accounts.getPostById(postId);
-			} catch (PostIdNotRecognisedException e) {
+				post = accounts.get(i).getPostById(postId);
+			} catch (PostIDNotRecognisedException e) {
 			}
-			return post; //Removed Else
 		}
-		throw PostIdNotRecognisedException;
+		if (post != null) { // Added if statement
+			return post;
+		} else {
+			throw new PostIDNotRecognisedException();
+		}
 	}
 
 	int commentPost(String handle, int id, String message) throws HandleNotRecognisedException,
@@ -176,13 +180,13 @@ public class SocialMedia implements SocialMediaInterface, java.io.Serializable {
 		Account account = getAccountByHandle(handle);
 		Post post = getPostById(id);
 		if (post instanceof Endorsement) {
-			throw NotActionablePostException;
+			throw new NotActionablePostException();
 		}
 		if (message.length() == 0 || message.length() > 100) {
-			throw InvalidPostException;
+			throw new InvalidPostException();
 		}
 		Comment comment = new Comment(account, post, message);
-		account.addCommment(comment);
+		account.addComment(comment);
 		post.addComment(comment);
 		return comment.getPostId();
 	}
@@ -196,7 +200,7 @@ public class SocialMedia implements SocialMediaInterface, java.io.Serializable {
 	String showIndividualPost(int id) throws PostIDNotRecognisedException {
 		Post post = getPostByID(id);
 
-		string toReturn = "ID: " + id
+		String toReturn = "ID: " + id
 				+ "\nAccount: " + getAccountHandleByPostId(id)
 				+ "\nNo. Endorsements: " + post.getNoEndorsements() + "No. Comments: " + post.getNoComments() // need to
 																												// add
@@ -208,69 +212,63 @@ public class SocialMedia implements SocialMediaInterface, java.io.Serializable {
 		return toReturn;
 	}
 
-	StringBuilder showPostChildrenDetails(int id) throws PostIDNotRecognisedException, NotActionablePostException{
-		Post post = getPostByID();
+	StringBuilder showPostChildrenDetails(int id) throws PostIDNotRecognisedException, NotActionablePostException {
+		Post post = getPostById(id);
 		if (post instanceof Endorsement) {
-			throw NotActionablePostException;
+			throw new NotActionablePostException();
 		}
-		StringBuilder toReturn = StringBuilder(showIndividualPost(id));
-		ArrayList<Comment> comments = post.getCommentsOnPost(); //Added Line
-		if (comments.size() == 0){
+		StringBuilder toReturn = new StringBuilder(showIndividualPost(id));
+		ArrayList<Comment> comments = post.getCommentsOnPost(); // Added Line
+		if (comments.size() == 0) {
 			return toReturn;
 		} else {
 			toReturn.append("\n|");
-			for (int i =0; i<= comments.size(); i++){
-				toReturn.append(showPartialChildrenDetails(post, 1)); //Changed depth + 1 -> 1 in function call, added final bracket
+			for (int i = 0; i <= comments.size(); i++) {
+				toReturn.append(showPartialChildrenDetails(post, 1)); // Changed depth + 1 -> 1 in function call, added
+																		// final bracket
 			}
 			return toReturn;
 		}
 	}
 
-	StringBuilder showPartialChildrenDetails(Post post, int depth) throws PostIDNotRecognisedException, NotActionablePostException{
-		int postId = post.getId();
+	StringBuilder showPartialChildrenDetails(Post post, int depth)
+			throws PostIDNotRecognisedException, NotActionablePostException {
+		int postId = post.getPostId();
 		String space = " ";
-		String lineStart = "\n" + space.repeat(4*depth);
-		String thisPost = "\n" + space.repeat(4*(depth-1))
-			+ "| > ID: " + post.getId()
-			+ lineStart + "Account: " + getAccountHandleByPostId(postId)
-			+ lineStart + "No. endorsements: " + post.getNoEndorsements()
-			+ " | No. comments: " + post.getNoComments()
-			+ lineStart + post.getMessage();
-		StringBuilder toReturn = StringBuilder(thisPost);
-		
+		String lineStart = "\n" + space.repeat(4 * depth);
+		String thisPost = "\n" + space.repeat(4 * (depth - 1))
+				+ "| > ID: " + post.getPostId()
+				+ lineStart + "Account: " + getAccountHandleByPostId(postId)
+				+ lineStart + "No. endorsements: " + post.getNoEndorsements()
+				+ " | No. comments: " + post.getNoComments()
+				+ lineStart + post.getMessage();
+		StringBuilder toReturn = new StringBuilder(thisPost);
+
 		ArrayList<Comment> comments = post.getCommentsOnPost();
-		
-		if (comments.size() == 0){
+
+		if (comments.size() == 0) {
 			return toReturn;
 		} else {
 			toReturn.append(lineStart + "|");
-			for (int i =0; i<= comments.size(); i++){
-				toReturn.append(showPartialChildrenDetails(post, depth + 1)); //Added bracket
+			for (int i = 0; i <= comments.size(); i++) {
+				toReturn.append(showPartialChildrenDetails(post, depth + 1)); // Added bracket
 			}
 			return toReturn;
 		}
-		
-		
-		string toReturn = "ID: " + id 
-		+ "\nAccount: " + getAccountHandleByPostId(id)
-		+ "\nNo. Endorsements: " + post.getNoEndorsements() + "No. Comments: " + post.getNoComments() //need to add in post class
-		+ "\n" + post.getMessage();
-	
-	
 	}
 
-	public Post getPostByID(int id) throws PostIdNotRecognisedException {
+	public Post getPostByID(int id) throws PostIDNotRecognisedException {
 		Post post = null;
 
 		for (int i = 0; i <= accounts.size(); i++) {
 			if (accounts.get(i).checkForPost(id)) {
-				Post post = accounts.get(i).getPostById(id);
+				post = accounts.get(i).getPostById(id);
 				accounts.get(i).removePost(post);
 			}
 		}
 
 		if (post == null) {
-			throw PostIDNotRecognisedException;
+			throw new PostIDNotRecognisedException();
 		}
 		return post;
 	}
@@ -324,8 +322,8 @@ public class SocialMedia implements SocialMediaInterface, java.io.Serializable {
 		int highestId = -1;
 		for (int i = 0; i <= accounts.size(); i++) {
 			if (accounts.get(i).getMostEndorsedPost().getNoEndorsements() > count) {
-				highestId = accounts.get(i).getMostEndorsedPost().getID();
-				count = highestId.getNoEndorsements();
+				highestId = accounts.get(i).getMostEndorsedPost().getPostId();
+				count = accounts.get(i).getMostEndorsedPost().getNoEndorsements();
 			}
 		}
 		return highestId;

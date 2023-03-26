@@ -22,7 +22,7 @@ public class Account implements java.io.Serializable {
 	}
 
 	Account(int id, String handle, String description) {
-		super(id, handle);
+		this(id, handle);
 		this.description = description;
 	}
 
@@ -139,10 +139,10 @@ public class Account implements java.io.Serializable {
 			}
 
 		}
-		throw PostIDNotRecognisedException;
+		throw new PostIDNotRecognisedException();
 	}
 
-	public int getMostEndorsedPost() {
+	public Post getMostEndorsedPost() {
 		int count = -1;
 		Post mostEndorsed = null;
 
