@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 
-public class Account implements Serializable{
-	//Attributes
+public class Account implements Serializable {
+	// Attributes
 	private int id;
 	private String handle;
 	private String description;
@@ -10,7 +10,7 @@ public class Account implements Serializable{
 	private ArrayList<Comment> comments;
 	private ArrayList<Endorsement> endorsements;
 
-	//Constructors
+	// Constructors
 	Account(int id, String handle) {
 		this.id = id;
 		this.handle = handle;
@@ -20,140 +20,144 @@ public class Account implements Serializable{
 		comments = new ArrayList<>();
 		endorsements = new ArrayList<>();
 	}
+
 	Account(int id, String handle, String description) {
 		super(id, handle);
 		this.description = description;
 	}
-	
-	//Methods
-	
+
+	// Methods
+
 	public void removeAccount() {
-		for (int i = 0; i<= originalPosts.size(); i++) {
+		for (int i = 0; i <= originalPosts.size(); i++) {
 			originalPosts.get(i).deletePost();
- 		}
+		}
 		originalPosts = null;
-		
+
 	}
-	
+
 	public void addEndorsement(Endorsement endorsement) {
 		endorsements.add(endorsement);
 	}
-	
-	
-	public void removePost(Post post){
-		if (post instanceof Endorsement){
+
+	public void removePost(Post post) {
+		if (post instanceof Endorsement) {
 			endorsements.remove(post);
-			
-		} else if (post instanceof Comment){
+
+		} else if (post instanceof Comment) {
 			comments.remove(post);
-			
+
 		} else {
 			originalPosts.remove(post);
 		}
-		
+
 	}
-	
-	public void addPost(Post post){
+
+	public void addPost(Post post) {
 		originalPosts.add(post);
 	}
-	
+
 	public void addComment(Comment comment) {
 		comments.add(comment);
 	}
-	
-	public boolean checkForPost(int Id) {
+
+	public boolean checkForPost(int postId) { // updated from iD to postId
 		boolean present = false;
-		for (int i = 0; i<= originalPosts.size(); i++){
-			if (originalPostsget(i).getPostId() == postId){
+		for (int i = 0; i <= originalPosts.size(); i++) {
+			if (originalPosts.get(i).getPostId() == postId) {
 				present = true;
 			}
-		for (int i = 0; i<= comments.size(); i++){
-			if (comments.get(i).getPostId() == postId){
-				present =  true;
-			}
-		for (int i = 0; i<= endorsement.size(); i++){
-			if (endorsement.get(i).getPostId() == postId){
+		}
+		for (int i = 0; i <= comments.size(); i++) {
+			if (comments.get(i).getPostId() == postId) {
 				present = true;
 			}
-	        return present;
+		}
+		for (int i = 0; i <= endorsements.size(); i++) {
+			if (endorsements.get(i).getPostId() == postId) {
+				present = true;
+			}
+			return present;
+		}
 	}
-	
-	//Getters and Setters
-	public int getID(){
+
+	// Getters and Setters
+	public int getID() {
 		return this.id;
 	}
-	
-	public void setHandle(String newHandle){
+
+	public void setHandle(String newHandle) {
 		this.handle = newHandle;
 	}
-	
-	public int getNoOriginalPosts(){
+
+	public int getNoOriginalPosts() {
 		return originalPosts.size();
 	}
 
-	public int getNoEndorsements(){
+	public int getNoEndorsements() {
 		return endorsements.size();
 	}
-	
-	public int getNoComments(){
+
+	public int getNoComments() {
 		return comments.size();
 	}
 
-		
-	public String getHandle(){
+	public String getHandle() {
 		return this.handle;
 	}
-	
-	
-	public void setDescription(String description){
+
+	public void setDescription(String description) {
 		this.description = description;
 	}
-	
-	public String getDescription(){
+
+	public String getDescription() {
 		return this.description;
 	}
-	
-	public int getEndorsementsRecieved(){
+
+	public int getEndorsementsRecieved() {
 		return endorsementsRecieved;
 	}
-	
-	public void addEndorsementsRecieved(){
-		endorsementsRecieved ++;
+
+	public void addEndorsementsRecieved() {
+		endorsementsRecieved++;
 	}
-	
-	public Post getPostById(int postId) throws PostIDNotRecognisedException{
-		for (int i = 0; i<= originalPosts.size(); i++){
-			if (originalPostsget(i).getPostId() == postId){
+
+	public Post getPostById(int postId) throws PostIDNotRecognisedException {
+		for (int i = 0; i <= originalPosts.size(); i++) {
+			if (originalPosts.get(i).getPostId() == postId) {
 				return originalPosts.get(i);
 			}
-		for (int i = 0; i<= comments.size(); i++){
-			if (comments.get(i).getPostId() == postId){
+		}
+		for (int i = 0; i <= comments.size(); i++) {
+			if (comments.get(i).getPostId() == postId) {
 				return comments.get(i);
 			}
-		for (int i = 0; i<= endorsement.size(); i++){
-			if (endorsement.get(i).getPostId() == postId){
-				return endorsement.get(i);
-			}
-		throw PostIDNotRecognisedException;
 		}
+		for (int i = 0; i <= endorsements.size(); i++) {
+			if (endorsements.get(i).getPostId() == postId) {
+				return endorsements.get(i);
+			}
+
+		}
+		throw PostIDNotRecognisedException;
 	}
-	
-	public int getMostEndorsedPost(){
+
+	public int getMostEndorsedPost() {
 		int count = -1;
 		int mostEndorsed = -1;
-		
-		for (int i = 0; i<= originalPosts.size(); i++){
-			if (originalPosts.get(i).getNoEndorsements() > count){
+
+		for (int i = 0; i <= originalPosts.size(); i++) {
+			if (originalPosts.get(i).getNoEndorsements() > count) {
 				mostEndorsed = originalPosts.get(i).getPostId();
 				count = originalPosts.get(i).getNoEndorsements();
-			} 		
+			}
 		}
-		
-		for (int i = 0; i<= comments.size(); i++){
-			if (comments.get(i).getNoEndorsements() > count){
+
+		for (int i = 0; i <= comments.size(); i++) {
+			if (comments.get(i).getNoEndorsements() > count) {
 				mostEndorsed = comments.get(i).getPostId();
 				count = comments.get(i).getNoEndorsements();
-			} 		
+			}
 		}
 		return mostEndorsed;
 	}
