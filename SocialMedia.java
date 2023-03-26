@@ -20,7 +20,7 @@ public class SocialMedia implements SocialMediaPlatform, java.io.Serializable {
 	}
 
 	// Account Creation, Deletion and Updating Methods
-	int createAccount(String handle) throws IllegalHandleException, InvalidHandleException {
+	public int createAccount(String handle) throws IllegalHandleException, InvalidHandleException {
 		if (handle.length() > 30 || handle.length() == 0) {
 			throw new InvalidHandleException();
 		}
@@ -42,7 +42,7 @@ public class SocialMedia implements SocialMediaPlatform, java.io.Serializable {
 		return account.getID();
 	}
 
-	int createAccount(String handle, String description) throws IllegalHandleException, InvalidHandleException {
+	public int createAccount(String handle, String description) throws IllegalHandleException, InvalidHandleException {
 		if (handle.length() > 30 || handle.length() == 0) {
 			throw new InvalidHandleException();
 		}
@@ -64,20 +64,20 @@ public class SocialMedia implements SocialMediaPlatform, java.io.Serializable {
 		return account.getID();
 	}
 
-	void removeAccount(int id) throws AccountIDNotRecognisedException {
+	public void removeAccount(int id) throws AccountIDNotRecognisedException {
 		Account account = getAccountById(id);
 		account.removeAccount();
 		accounts.remove(account);
 
 	}
 
-	void removeAccount(String handle) throws HandleNotRecognisedException {
+	public void removeAccount(String handle) throws HandleNotRecognisedException {
 		Account account = getAccountByHandle(handle);
 		account.removeAccount();
 		accounts.remove(account);
 	}
 
-	void changeAccountHandle(String oldHandle, String newHandle)
+	public void changeAccountHandle(String oldHandle, String newHandle)
 			throws HandleNotRecognisedException, IllegalHandleException, InvalidHandleException {
 		Account account = getAccountByHandle(oldHandle);
 
@@ -101,13 +101,13 @@ public class SocialMedia implements SocialMediaPlatform, java.io.Serializable {
 
 	}
 
-	void updateAccountDescription(String handle, String description) throws HandleNotRecognisedException {
+	public void updateAccountDescription(String handle, String description) throws HandleNotRecognisedException {
 		Account account = getAccountByHandle(handle);
 		account.setDescription(description);
 
 	}
 
-	Account getAccountByHandle(String handle) throws HandleNotRecognisedException {
+	private Account getAccountByHandle(String handle) throws HandleNotRecognisedException {
 		for (int i = 0; i < accounts.size(); i++) {
 			if (accounts.get(i).getHandle() == handle) {
 				return accounts.get(i);
@@ -117,7 +117,7 @@ public class SocialMedia implements SocialMediaPlatform, java.io.Serializable {
 		throw new HandleNotRecognisedException();
 	}
 
-	Account getAccountById(int id) throws AccountIDNotRecognisedException {
+	private Account getAccountById(int id) throws AccountIDNotRecognisedException {
 		for (int i = 0; i < accounts.size(); i++) {
 			if (accounts.get(i).getID() == id) {
 				return accounts.get(i);
@@ -126,7 +126,7 @@ public class SocialMedia implements SocialMediaPlatform, java.io.Serializable {
 		throw new AccountIDNotRecognisedException();
 	}
 
-	String showAccount(String handle) throws HandleNotRecognisedException {
+	public String showAccount(String handle) throws HandleNotRecognisedException {
 		Account account = getAccountByHandle(handle);
 		int noPosts = account.getNoOriginalPosts() + account.getNoComments() + account.getNoEndorsements();
 		String toReturn = "ID: " + account.getID()
@@ -139,7 +139,7 @@ public class SocialMedia implements SocialMediaPlatform, java.io.Serializable {
 
 	// Post Methods
 
-	int createPost(String handle, String message) throws HandleNotRecognisedException, InvalidPostException {
+	public int createPost(String handle, String message) throws HandleNotRecognisedException, InvalidPostException {
 		Account account = getAccountByHandle(handle);
 		if (message.length() == 0 || message.length() > 100) {
 			throw new InvalidPostException();
@@ -149,7 +149,7 @@ public class SocialMedia implements SocialMediaPlatform, java.io.Serializable {
 		return post.getPostId();
 	}
 
-	int endorsePost(String handle, int id)
+	public int endorsePost(String handle, int id)
 			throws HandleNotRecognisedException, PostIDNotRecognisedException, NotActionablePostException {
 		Account account = getAccountByHandle(handle);
 		Post post = getPostById(id);
@@ -162,7 +162,7 @@ public class SocialMedia implements SocialMediaPlatform, java.io.Serializable {
 		return endorsement.getPostId();
 	}
 
-	Post getPostById(int postId) throws PostIDNotRecognisedException {
+	private Post getPostById(int postId) throws PostIDNotRecognisedException {
 		Post post = null;
 		for (int i = 0; i < accounts.size(); i++) { // added int
 			try {
@@ -177,7 +177,7 @@ public class SocialMedia implements SocialMediaPlatform, java.io.Serializable {
 		}
 	}
 
-	int commentPost(String handle, int id, String message) throws HandleNotRecognisedException,
+	public int commentPost(String handle, int id, String message) throws HandleNotRecognisedException,
 			PostIDNotRecognisedException, NotActionablePostException, InvalidPostException {
 		Account account = getAccountByHandle(handle);
 		Post post = getPostById(id);
@@ -193,13 +193,13 @@ public class SocialMedia implements SocialMediaPlatform, java.io.Serializable {
 		return comment.getPostId();
 	}
 
-	void deletePost(int id) throws PostIDNotRecognisedException {
+	public void deletePost(int id) throws PostIDNotRecognisedException {
 		Post post = getPostByID(id);
 		post.deletePost();
 
 	}
 
-	String showIndividualPost(int id) throws PostIDNotRecognisedException {
+	public String showIndividualPost(int id) throws PostIDNotRecognisedException {
 		Post post = getPostByID(id);
 
 		String toReturn = "ID: " + id
@@ -214,7 +214,8 @@ public class SocialMedia implements SocialMediaPlatform, java.io.Serializable {
 		return toReturn;
 	}
 
-	StringBuilder showPostChildrenDetails(int id) throws PostIDNotRecognisedException, NotActionablePostException {
+	public StringBuilder showPostChildrenDetails(int id)
+			throws PostIDNotRecognisedException, NotActionablePostException {
 		Post post = getPostById(id);
 		if (post instanceof Endorsement) {
 			throw new NotActionablePostException();
@@ -233,8 +234,8 @@ public class SocialMedia implements SocialMediaPlatform, java.io.Serializable {
 		}
 	}
 
-	StringBuilder showPartialChildrenDetails(Post post, int depth)
-			throws PostIDNotRecognisedException, NotActionablePostException {
+	private StringBuilder showPartialChildrenDetails(Post post, int depth)
+			throws PostIDNotRecognisedException {
 		int postId = post.getPostId();
 		String space = " ";
 		String lineStart = "\n" + space.repeat(4 * depth);
@@ -259,7 +260,7 @@ public class SocialMedia implements SocialMediaPlatform, java.io.Serializable {
 		}
 	}
 
-	public Post getPostByID(int id) throws PostIDNotRecognisedException {
+	private Post getPostByID(int id) throws PostIDNotRecognisedException {
 		Post post = null;
 
 		for (int i = 0; i <= accounts.size(); i++) {
@@ -275,7 +276,7 @@ public class SocialMedia implements SocialMediaPlatform, java.io.Serializable {
 		return post;
 	}
 
-	public String getAccountHandleByPostId(int id) {
+	private String getAccountHandleByPostId(int id) {
 		String handle = "";
 		for (int i = 0; i <= accounts.size(); i++) {
 			if (accounts.get(i).checkForPost(id)) {
@@ -287,11 +288,11 @@ public class SocialMedia implements SocialMediaPlatform, java.io.Serializable {
 	}
 
 	// Analytics Methods
-	int getNumberOfAccounts() {
+	public int getNumberOfAccounts() {
 		return accounts.size();
 	}
 
-	int getTotalOriginalPosts() {
+	public int getTotalOriginalPosts() {
 		int count = 0;
 		for (int i = 0; i < accounts.size(); i++) {
 			count += accounts.get(i).getNoOriginalPosts();
@@ -300,7 +301,7 @@ public class SocialMedia implements SocialMediaPlatform, java.io.Serializable {
 		return count;
 	}
 
-	int getTotalEndorsmentPosts() {
+	public int getTotalEndorsmentPosts() {
 		int count = 0;
 		for (int i = 0; i < accounts.size(); i++) {
 			count += accounts.get(i).getNoEndorsements();
@@ -310,7 +311,7 @@ public class SocialMedia implements SocialMediaPlatform, java.io.Serializable {
 
 	}
 
-	int getTotalCommentPosts() {
+	public int getTotalCommentPosts() {
 		int count = 0;
 		for (int i = 0; i < accounts.size(); i++) {
 			count += accounts.get(i).getNoComments();
@@ -319,7 +320,7 @@ public class SocialMedia implements SocialMediaPlatform, java.io.Serializable {
 		return count;
 	}
 
-	int getMostEndorsedPost() {
+	public int getMostEndorsedPost() {
 		int count = -1;
 		int highestId = -1;
 		for (int i = 0; i <= accounts.size(); i++) {
@@ -331,7 +332,7 @@ public class SocialMedia implements SocialMediaPlatform, java.io.Serializable {
 		return highestId;
 	}
 
-	int getMostEndorsedAccount() {
+	public int getMostEndorsedAccount() {
 		int count = -1;
 		int highestId = -1;
 		for (int i = 0; i <= accounts.size(); i++) {
@@ -345,25 +346,25 @@ public class SocialMedia implements SocialMediaPlatform, java.io.Serializable {
 
 	// Management related methods
 
-	void erasePlatform() {
+	public void erasePlatform() {
 		for (int i = 0; i <= accounts.size(); i++) {
-			removeAccount(accounts.get(i).getID());
+			accounts.get(i).removeAccount();
 
 		}
 	}
 
-	void savePlatform(String filename) throws IOException {
+	public void savePlatform(String filename) throws IOException {
 		try (FileOutputStream fos = new FileOutputStream(filename);
-		ObjectOutputStream oos = new ObjectOutputStream(fos)) {
+				ObjectOutputStream oos = new ObjectOutputStream(fos)) {
 			oos.writeObject(this);
 		} catch (IOException e) {
 			throw e;
 		}
 	}
 
-	void loadPlatform(String filename) throws IOException, ClassNotFoundException {
+	public void loadPlatform(String filename) throws IOException, ClassNotFoundException {
 		try (FileInputStream fis = new FileInputStream(filename);
-		ObjectInputStream ois = new ObjectInputStream(fis)) {
+				ObjectInputStream ois = new ObjectInputStream(fis)) {
 			SocialMedia loaded = (SocialMedia) ois.readObject();
 			this.nextID = loaded.nextID;
 			this.accounts = loaded.accounts;

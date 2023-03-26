@@ -79,8 +79,8 @@ public class Account implements java.io.Serializable {
 			if (endorsements.get(i).getPostId() == postId) {
 				present = true;
 			}
-			return present;
 		}
+		return present;
 	}
 
 	// Getters and Setters
