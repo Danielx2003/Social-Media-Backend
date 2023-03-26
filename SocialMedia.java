@@ -344,10 +344,22 @@ public class SocialMedia implements SocialMediaInterface, Serializable {
 	}
 	
 	void savePlatform(String filename) throws IOException{
-		//TO DO
+		try (FileOutputStream fos = new FileOutputStream(filename);
+		     ObjectOutputStream oos = new ObjectOutputStream(fos)) {
+			oos.writeObject(this);
+		} catch (IOException e) {
+			throw IOException;
+		}
 	}
 	
 	void loadPlatform(String filename) throws IOException, ClassNotFoundException{
-		//TO DO
+		try (FileInputStream fis = new FileInputStream(filename);
+		     ObjectInputStream ois = new ObjectInputStream(fis)) {
+			this = ois.readObject();
+		} catch (IOException e) {
+			throw IOException;
+		} catch (ClassNotFoundException e) {
+			throw ClassNotFoundException;
+		}
 	}
 }
