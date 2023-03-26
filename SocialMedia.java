@@ -3,19 +3,14 @@ import java.util.ArrayList;
 public class SocialMedia implements SocialMediaInterface, Serializable {
 	
 	//Attributes
-	
-	private int noAccounts;
 	private int nextID;
-	private int noPosts;
 	private int noComments;
 	private int noEndorsements;
 	private ArrayList<Account> accounts;
 
 	//Constructors
 	public SocialMedia() {
-		noAccounts = 0;
 		nextID = 1;
-		noPosts = 0;
 		noComments = 0;
 		noEndorsements = 0;
 		accounts = new ArrayList<>();
