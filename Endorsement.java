@@ -6,7 +6,7 @@ public class Endorsement extends Post {
 	//Constructors 
 	
 	public Endorsement(Account account, Post post){
-		super(account, "EP@" + [account.getHandle()] + ": " + [post.getMessage()]);
+		super(account, "EP@" + account.getHandle() + ": " + post.getMessage());
 		this.post = post;
 	}
 	
