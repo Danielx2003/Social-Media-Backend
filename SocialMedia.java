@@ -344,7 +344,10 @@ public class SocialMedia implements SocialMediaInterface, Serializable {
 	//Management related methods
 	
 	void erasePlatform(){
-		//TO DO
+		for (int i = 0; i<= accounts.size(); i++){
+			removeAccount(accounts.get(i).getID());
+		
+		}
 	}
 	
 	void savePlatform(String filename) throws IOException{
