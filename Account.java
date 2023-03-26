@@ -1,3 +1,5 @@
+package socialmedia;
+
 import java.util.ArrayList;
 
 public class Account implements java.io.Serializable {

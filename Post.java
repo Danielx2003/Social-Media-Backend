@@ -1,3 +1,5 @@
+package socialmedia;
+
 import java.util.ArrayList;
 
 public class Post implements java.io.Serializable {

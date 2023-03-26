@@ -1,3 +1,5 @@
+package socialmedia;
+
 import java.util.ArrayList;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -5,7 +7,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.IOException;
 
-public class SocialMedia implements SocialMediaInterface, java.io.Serializable {
+public class SocialMedia implements SocialMediaPlatform, java.io.Serializable {
 
 	// Attributes
 	private int nextID;
@@ -351,10 +353,24 @@ public class SocialMedia implements SocialMediaInterface, java.io.Serializable {
 	}
 
 	void savePlatform(String filename) throws IOException {
-		// TO DO
+		try (FileOutputStream fos = new FileOutputStream(filename);
+		ObjectOutputStream oos = new ObjectOutputStream(fos)) {
+			oos.writeObject(this);
+		} catch (IOException e) {
+			throw e;
+		}
 	}
 
 	void loadPlatform(String filename) throws IOException, ClassNotFoundException {
-		// TO DO
+		try (FileInputStream fis = new FileInputStream(filename);
+		ObjectInputStream ois = new ObjectInputStream(fis)) {
+			SocialMedia loaded = (SocialMedia) ois.readObject();
+			this.nextID = loaded.nextID;
+			this.accounts = loaded.accounts;
+		} catch (IOException e) {
+			throw e;
+		} catch (ClassNotFoundException e) {
+			throw e;
+		}
 	}
 }

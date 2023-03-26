@@ -1,3 +1,5 @@
+package socialmedia;
+
 public class Comment extends Post {
 
 	private static Post emptyPost = new Post();
