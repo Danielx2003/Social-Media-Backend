@@ -1,6 +1,8 @@
+package socialmedia;
+
 import java.util.ArrayList;
 
-public class Account implements Serializable {
+public class Account implements java.io.Serializable {
 	// Attributes
 	private int id;
 	private String handle;
@@ -22,7 +24,7 @@ public class Account implements Serializable {
 	}
 
 	Account(int id, String handle, String description) {
-		super(id, handle);
+		this(id, handle);
 		this.description = description;
 	}
 
@@ -77,8 +79,8 @@ public class Account implements Serializable {
 			if (endorsements.get(i).getPostId() == postId) {
 				present = true;
 			}
-			return present;
 		}
+		return present;
 	}
 
 	// Getters and Setters
@@ -139,23 +141,23 @@ public class Account implements Serializable {
 			}
 
 		}
-		throw PostIDNotRecognisedException;
+		throw new PostIDNotRecognisedException();
 	}
 
-	public int getMostEndorsedPost() {
+	public Post getMostEndorsedPost() {
 		int count = -1;
-		int mostEndorsed = -1;
+		Post mostEndorsed = null;
 
 		for (int i = 0; i <= originalPosts.size(); i++) {
 			if (originalPosts.get(i).getNoEndorsements() > count) {
-				mostEndorsed = originalPosts.get(i).getPostId();
+				mostEndorsed = originalPosts.get(i);
 				count = originalPosts.get(i).getNoEndorsements();
 			}
 		}
 
 		for (int i = 0; i <= comments.size(); i++) {
 			if (comments.get(i).getNoEndorsements() > count) {
-				mostEndorsed = comments.get(i).getPostId();
+				mostEndorsed = comments.get(i);
 				count = comments.get(i).getNoEndorsements();
 			}
 		}

@@ -1,10 +1,12 @@
+package socialmedia;
+
 import java.util.ArrayList;
 
-public class Post implements Serializable {
+public class Post implements java.io.Serializable {
 	// Attributes
 	private static int nextId = 0;
 	private int postId;
-	private Account account;
+	protected Account account; //private > protected
 	private String message;
 	private ArrayList<Comment> comments;
 	private ArrayList<Endorsement> endorsements;
@@ -45,6 +47,7 @@ public class Post implements Serializable {
 		endorsements = null;
 		
 		account.removePost(this);
+	}
 
 	public void removeComment(Comment comment) {
 		comments.remove(comment);
@@ -63,7 +66,7 @@ public class Post implements Serializable {
 		return this.account;
 	}
 
-	public String getMesssage() {
+	public String getMessage() { //Removed extra s
 		return this.message;
 	}
 
