@@ -116,7 +116,7 @@ public class SocialMedia implements SocialMediaPlatform, java.io.Serializable {
 		}
 		throw new HandleNotRecognisedException();
 	}
-
+  
 	private Account getAccountById(int id) throws AccountIDNotRecognisedException {
 		for (int i = 0; i < accounts.size(); i++) {
 			if (accounts.get(i).getID() == id) {
