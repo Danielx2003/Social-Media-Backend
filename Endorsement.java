@@ -10,6 +10,7 @@ public class Endorsement extends Post {
 	public Endorsement(Account account, Post post){
 		super(account, "EP@" + account.getHandle() + ": " + post.getMessage());
 		this.post = post;
+		assert this.account.getID() == account.getID();
 	}
 	
 	//Methods
