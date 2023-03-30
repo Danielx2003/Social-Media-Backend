@@ -26,20 +26,38 @@ public class Account implements java.io.Serializable {
 	Account(int id, String handle, String description) {
 		this(id, handle);
 		this.description = description;
+		assert this.id == id;
+		assert this.handle == handle;
 	}
 
 	// Methods
 
 	public void removeAccount() {
-		for (int i = 0; i <= originalPosts.size(); i++) {
+		for (int i = 0; i < originalPosts.size(); i++) {
 			originalPosts.get(i).deletePost();
 		}
+		
+		for (int i = 0; i < endorsements.size(); i++) {
+			endorsements.get(i).deletePost();
+		}
+		
+		for (int i = 0; i < comments.size(); i++) {
+			comments.get(i).deletePost();
+		}
+		
+		assert originalPosts.size() == 0;
+		assert endorsements.size() == 0;
+		assert comments.size() == 0;
 		originalPosts = null;
+		endorsements = null;
+		comments = null;
 
 	}
 
 	public void addEndorsement(Endorsement endorsement) {
+		int noEndorsements = endorsements.size();
 		endorsements.add(endorsement);
+		assert noEndorsements  + 1 == endorsements.size();
 	}
 
 	public void removePost(Post post) {
@@ -56,26 +74,30 @@ public class Account implements java.io.Serializable {
 	}
 
 	public void addPost(Post post) {
+		int noPosts = originalPosts.size();
 		originalPosts.add(post);
+		assert noPosts  + 1 == originalPosts.size();
 	}
 
 	public void addComment(Comment comment) {
+		int noComments = comments.size();
 		comments.add(comment);
+		assert noComments  + 1 == comments.size();
 	}
 
-	public boolean checkForPost(int postId) { // updated from iD to postId
+	public boolean checkForPost(int postId) {
 		boolean present = false;
-		for (int i = 0; i <= originalPosts.size(); i++) {
+		for (int i = 0; i < originalPosts.size(); i++) {
 			if (originalPosts.get(i).getPostId() == postId) {
 				present = true;
 			}
 		}
-		for (int i = 0; i <= comments.size(); i++) {
+		for (int i = 0; i < comments.size(); i++) {
 			if (comments.get(i).getPostId() == postId) {
 				present = true;
 			}
 		}
-		for (int i = 0; i <= endorsements.size(); i++) {
+		for (int i = 0; i < endorsements.size(); i++) {
 			if (endorsements.get(i).getPostId() == postId) {
 				present = true;
 			}
@@ -125,37 +147,37 @@ public class Account implements java.io.Serializable {
 	}
 
 	public Post getPostById(int postId) throws PostIDNotRecognisedException {
-		for (int i = 0; i <= originalPosts.size(); i++) {
+		for (int i = 0; i < originalPosts.size(); i++) {
 			if (originalPosts.get(i).getPostId() == postId) {
 				return originalPosts.get(i);
 			}
 		}
-		for (int i = 0; i <= comments.size(); i++) {
+		for (int i = 0; i < comments.size(); i++) {
 			if (comments.get(i).getPostId() == postId) {
 				return comments.get(i);
 			}
 		}
-		for (int i = 0; i <= endorsements.size(); i++) {
+		for (int i = 0; i < endorsements.size(); i++) {
 			if (endorsements.get(i).getPostId() == postId) {
 				return endorsements.get(i);
 			}
 
 		}
-		throw new PostIDNotRecognisedException();
+		throw new PostIDNotRecognisedException(); //No post was found with correct Id
 	}
 
 	public Post getMostEndorsedPost() {
 		int count = -1;
 		Post mostEndorsed = null;
 
-		for (int i = 0; i <= originalPosts.size(); i++) {
+		for (int i = 0; i < originalPosts.size(); i++) {
 			if (originalPosts.get(i).getNoEndorsements() > count) {
 				mostEndorsed = originalPosts.get(i);
 				count = originalPosts.get(i).getNoEndorsements();
 			}
 		}
 
-		for (int i = 0; i <= comments.size(); i++) {
+		for (int i = 0; i < comments.size(); i++) {
 			if (comments.get(i).getNoEndorsements() > count) {
 				mostEndorsed = comments.get(i);
 				count = comments.get(i).getNoEndorsements();

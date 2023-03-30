@@ -6,8 +6,9 @@ public class Comment extends Post {
 	private Post post;
 
 	public Comment(Account account, Post post, String message) {
-		super(account, message); // added semi colon
+		super(account, message); 
 		this.post = post;
+		assert this.account.getID() == account.getID();
 
 	}
 

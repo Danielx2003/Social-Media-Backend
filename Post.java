@@ -6,13 +6,13 @@ public class Post implements java.io.Serializable {
 	// Attributes
 	private static int nextId = 0;
 	private int postId;
-	protected Account account; //private > protected
+	protected Account account;
 	private String message;
 	private ArrayList<Comment> comments;
 	private ArrayList<Endorsement> endorsements;
 
 	// Constructors
-	public Post() {
+	public Post() { //This Post constructor is for comments when their post is deleted
 		this.postId = -1;
 		this.message = "The original content was removed from the system and is no longer available.";
 	}
@@ -62,11 +62,11 @@ public class Post implements java.io.Serializable {
 		return this.postId;
 	}
 
-	public Account getAccount() {// changed from int to account
+	public Account getAccount() {
 		return this.account;
 	}
 
-	public String getMessage() { //Removed extra s
+	public String getMessage() { 
 		return this.message;
 	}
 
